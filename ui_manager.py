@@ -33,11 +33,11 @@ def student_menu_view() -> str:
     """Відображає меню дій над студентами."""
     print("\n--- МЕНЮ 1: ДІЇ НАД СТУДЕНТАМИ ---")
     print("1. Додати студента")
-    print("2. Відрахувати студента (Наступний етап)")
-    print("3. Редагувати дані студента (Наступний етап)")
-    print("4. Відобразити УСІХ студентів (Повний список)")
-    print("5. Відобразити успішність конкретного студента (Наступний етап)")
-    print("0. У попереднє меню...") 
+    print("2. Відрахувати студента")
+    print("3. Редагувати дані студента")
+    print("4. Відобразити УСІХ студентів")
+    print("5. Відобразити успішність конкретного студента")
+    print("0. У попереднє меню") 
     return get_user_choice(5)
 
 # --- Функції для меню (диспетчери) ---
@@ -45,15 +45,27 @@ def student_menu_view() -> str:
 def handle_student_actions(journal: dict):
     """Керує циклом та маршрутизацією для меню дій над студентами."""
     
-    from student_data import add_student, display_all_students 
+    from student_data import (
+        add_student,
+        display_all_students,
+        expel_student,
+        edit_student,
+        display_student_performance,
+    )
     
     while True:
         choice = student_menu_view()
 
         if choice == '1':
             add_student(journal)
+        elif choice == '2':
+            expel_student(journal)
+        elif choice == '3':
+            edit_student(journal)
         elif choice == '4':
             display_all_students(journal)
+        elif choice == '5':
+            display_student_performance(journal)
         elif choice == '0':
             break 
         else:
