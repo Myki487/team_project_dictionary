@@ -70,10 +70,61 @@ def edit_student(journal: dict):
     """
     if not journal:
         print("\nЖурнал порожній. Немає студентів для редагування.")
-        return
 
-    # Показати поточний список для вибору
-    display_all_students(journal)
+        # Відображає повний список усіх студентів та їхні дані.
+        display_all_students(journal)
+
+        if not journal:
+            print("\nЖурнал порожній. Немає студентів для відображення.")
+            return
+
+        print("\n===== ПОВНИЙ СПИСОК СТУДЕНТІВ =====")
+
+        for student_id, data in journal.items():
+            first = data.get('first_name', '')
+            last = data.get('last_name', '')
+            group = data.get('group', '')
+            performance = data.get('performance', {}) or {}
+
+            # Основний заголовок по студентах
+            print("-" * 70)
+            print(f"ID: {student_id} | {last} {first} | Група: {group}")
+
+            # Успішність
+            if not performance:
+                print("  Успішність: немає записів (немає оцінок)")
+                continue
+
+            total_sum = 0
+            total_count = 0
+            print("  Успішність:")
+            for subj, grades in performance.items():
+                # Очікуємо, що grades — список чисел або порожній список
+                if not grades:
+                    print(f"    - {subj}: немає оцінок")
+                    continue
+                # Вивести оцінки через кому
+                grades_str = ", ".join(str(g) for g in grades)
+                # Середній по предмету
+                try:
+                    subj_avg = sum(grades) / len(grades)
+                except Exception:
+                    subj_avg = None
+                if subj_avg is not None:
+                    print(f"    - {subj}: [{grades_str}] (середній: {subj_avg:.2f})")
+                    total_sum += sum(grades)
+                    total_count += len(grades)
+                else:
+                    print(f"    - {subj}: [{grades_str}]")
+
+            # Загальний середній по студенту
+            if total_count:
+                overall_avg = total_sum / total_count
+                print(f"  Загальний середній бал: {overall_avg:.2f}")
+            else:
+                print("  Загальний середній бал: немає оцінок")
+
+        print("-" * 70)
 
     student_id = get_valid_string("Введіть ID студента для редагування (наприклад, STU001): ")
     if student_id not in journal:
