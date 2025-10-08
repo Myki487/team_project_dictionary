@@ -9,14 +9,14 @@ GLOBAL_JOURNAL = {} # Змінна для зберігання словника 
 def main():
     global GLOBAL_JOURNAL
     print("Запуск електронного журналу...")
-    
+
     # 1. ЗАВАНТАЖЕННЯ ДАНИХ
     GLOBAL_JOURNAL = load_journal(JOURNAL_FILE)
     if GLOBAL_JOURNAL:
         print(f"Дані завантажено успішно. ({len(GLOBAL_JOURNAL)} студентів).")
     else:
         print("Розпочинаємо з порожнього журналу.")
-        
+
     # 2. ГОЛОВНИЙ ЦИКЛ ПРОГРАМИ
     while True:
         choice = main_menu_view() 
