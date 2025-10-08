@@ -39,3 +39,4 @@ def display_all_students(journal: dict):
     for student_id, data in journal.items():
         print(f"{student_id:<8} | {data['last_name']:<15} | {data['first_name']:<15} | {data['group']:<10}")
     print("-" * 55)
+    
