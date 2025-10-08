@@ -68,6 +68,7 @@ def edit_student(journal: dict):
     Редагує дані студента: прізвище, ім'я, група.
     Користувач може пропустити поле (натиснути Enter) щоб залишити поточне значення.
     """
+    
     if not journal:
         print("\nЖурнал порожній. Немає студентів для редагування.")
 
@@ -160,3 +161,50 @@ def edit_student(journal: dict):
 
     journal[student_id] = student
     print(f"\nДані студента (ID: {student_id}) успішно оновлено.")
+
+def show_student_performance(journal: dict, student_id: str | None = None):
+    """
+    Показує детальну успішність конкретного студента за його ID.
+    Якщо student_id не передано — запитує у користувача.
+    """
+    if not journal:
+        print("\nЖурнал порожній. Немає студентів для відображення успішності.")
+        return
+
+    if not student_id:
+        student_id = get_valid_string("Введіть ID студента для відображення успішності (наприклад, STU001): ")
+
+    student = journal.get(student_id)
+    if not student:
+        print(f"\nСтудент з ID {student_id} не знайдений.")
+        return
+
+    print(f"\nУспішність студента {student.get('first_name','')} {student.get('last_name','')} (ID: {student_id}):")
+    performance = student.get('performance', {}) or {}
+    if not performance:
+        print("  Немає записів про оцінки.")
+        return
+
+    total_sum = 0
+    total_count = 0
+    for subj, grades in performance.items():
+        if not grades:
+            print(f"  - {subj}: немає оцінок")
+            continue
+        grades_str = ", ".join(str(g) for g in grades)
+        try:
+            subj_avg = sum(grades) / len(grades)
+        except Exception:
+            subj_avg = None
+        if subj_avg is not None:
+            print(f"  - {subj}: [{grades_str}] (середній: {subj_avg:.2f})")
+            total_sum += sum(grades)
+            total_count += len(grades)
+        else:
+            print(f"  - {subj}: [{grades_str}]")
+
+    if total_count:
+        overall_avg = total_sum / total_count
+        print(f"  Загальний середній бал: {overall_avg:.2f}")
+    else:
+        print(" Загальний середній бал: немає оцінок")
