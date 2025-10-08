@@ -1,0 +1,7 @@
+# Для кеш файлів папки pycache
+__pycache__/
+*.pyc
+
+# IDE/Editor файли (провсяк випадок)
+.vscode/
+.idea/
