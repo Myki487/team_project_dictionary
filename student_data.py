@@ -61,3 +61,51 @@ def expel_student(journal: dict):
         print(f"\nСтудент {student['first_name']} {student['last_name']} (ID: {student_id}) відрахований.")
     else:
         print("\nВідмовлено. Студента не відраховано.")
+
+
+def edit_student(journal: dict):
+    """
+    Редагує дані студента: прізвище, ім'я, група.
+    Користувач може пропустити поле (натиснути Enter) щоб залишити поточне значення.
+    """
+    if not journal:
+        print("\nЖурнал порожній. Немає студентів для редагування.")
+        return
+
+    # Показати поточний список для вибору
+    display_all_students(journal)
+
+    student_id = get_valid_string("Введіть ID студента для редагування (наприклад, STU001): ")
+    if student_id not in journal:
+        print(f"\nСтудент з ID {student_id} не знайдений.")
+        return
+
+    student = journal[student_id]
+    print(f"\nПоточні дані для {student['first_name']} {student['last_name']} (ID: {student_id}):")
+    print(f"  Прізвище: {student['last_name']}")
+    print(f"  Ім'я: {student['first_name']}")
+    print(f"  Група: {student['group']}")
+
+    # Запитати нові значення (порожнє = без змін)
+    new_last = input(f"Введіть нове Прізвище (залиште порожнім щоб не змінювати) [{student['last_name']}]: ").strip()
+    new_first = input(f"Введіть нове Ім'я (залиште порожнім щоб не змінювати) [{student['first_name']}]: ").strip()
+    new_group = input(f"Введіть нову Групу (залиште порожнім щоб не змінювати) [{student['group']}]: ").strip()
+
+    if not new_last and not new_first and not new_group:
+        print("\nНічого не змінено.")
+        return
+
+    confirm = input("Підтвердьте внесення змін (y/n): ").strip().lower()
+    if confirm not in ('y', 'yes', 'т', 'так'):
+        print("\nРедагування відмінено. Дані не змінено.")
+        return
+
+    if new_last:
+        student['last_name'] = new_last
+    if new_first:
+        student['first_name'] = new_first
+    if new_group:
+        student['group'] = new_group
+
+    journal[student_id] = student
+    print(f"\nДані студента (ID: {student_id}) успішно оновлено.")
