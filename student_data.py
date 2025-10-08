@@ -1,6 +1,7 @@
 # Імпортуємо функції-помічники та функції вводу даних
 from utility import generate_next_id 
 from ui_manager import get_valid_string
+from ui_manager import get_valid_course
 
 def add_student(journal: dict):
     """Збирає дані про студента, генерує ID та додає запис до журналу."""
@@ -14,12 +15,14 @@ def add_student(journal: dict):
     last_name = get_valid_string("Введіть Прізвище: ")
     first_name = get_valid_string("Введіть Ім'я: ")
     group = get_valid_string("Введіть Групу: ")
+    course = get_valid_course("Введіть Курс (1-6): ")
     
     # 3. Додавання нового запису у GLOBAL_JOURNAL (через аргумент journal)
     journal[new_id] = {
         "first_name": first_name,
         "last_name": last_name,
         "group": group,
+        "course": course,
         "performance": {}  # Словник для майбутніх оцінок
     }
     

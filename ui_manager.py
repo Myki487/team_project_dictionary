@@ -8,6 +8,17 @@ def get_valid_string(prompt: str) -> str:
             return value
         print("Помилка: Ввід не може бути порожнім. Спробуйте ще раз.")
 
+
+def get_valid_course(prompt: str) -> int:
+    # Питає номер курсу — приймає тільки числа 1..6, повертає int.
+    while True:
+        value = input(prompt).strip()
+        if value.isdigit():
+            n = int(value)
+            if 1 <= n <= 6:
+                return n
+        print("Помилка: введіть число від 1 до 6.")
+
 def get_user_choice(max_option: int) -> str:
     """Запитує коректний вибір у меню (від 0 до max_option)."""
     while True:
