@@ -2,6 +2,7 @@ from ui_manager import get_valid_string
 from utility import find_student
 
 
+#  Додавання нового предмета студенту
 def add_subject(journal: dict, student_id: str = None):
     """Додає новий предмет для конкретного студента."""
     if not journal:
@@ -30,6 +31,7 @@ def add_subject(journal: dict, student_id: str = None):
     return subject
 
 
+#  Додавання оцінки студенту за певний предмет
 def add_grade(journal: dict):
     """Додає оцінку студенту за предмет (по ID)."""
     if not journal:
@@ -71,6 +73,7 @@ def add_grade(journal: dict):
             print("Помилка: введіть число.")
 
 
+#  Перегляд усіх оцінок студента та середнього балу
 def view_student_grades(journal: dict):
     """Переглядає оцінки студента (по ID) та середнє арифметичне."""
     if not journal:
@@ -89,7 +92,7 @@ def view_student_grades(journal: dict):
         print(f"⚠️ У студента {student['last_name']} {student['first_name']} ще немає оцінок.")
         return
 
-    print(f"\n📘 Успішність студента {student['last_name']} {student['first_name']}:")
+    print(f"\n📘 Успішність студента {student['last_name']} {student['first_name']} {student['id']}:")
     for subject, marks in performance.items():
         if marks:
             avg = sum(marks) / len(marks)
@@ -100,6 +103,7 @@ def view_student_grades(journal: dict):
     print("\n✅ Перегляд завершено.")
 
 
+#  Редагування конкретної оцінки студента
 def edit_grade(journal: dict):
     """Редагує оцінку студента (по ID)."""
     student_id = get_valid_string("Введіть ID студента: ")
@@ -129,7 +133,7 @@ def edit_grade(journal: dict):
     try:
         index = int(input("Введіть номер оцінки для редагування (починаючи з 1): ")) - 1
         if 0 <= index < len(performance[subject]):
-            new_grade = int(input("Нова оцінка (1–12): "))
+            new_grade = int(input("Нова оцінка (1–100): "))
             if 1 <= new_grade <= 100:
                 performance[subject][index] = new_grade
                 print("✅ Оцінку змінено успішно.")
@@ -141,6 +145,7 @@ def edit_grade(journal: dict):
         print("❌ Введено некоректне число.")
 
 
+# Видалення конкретної оцінки студента
 def delete_grade(journal: dict):
     """Видаляє оцінку студента (по ID)."""
     student_id = get_valid_string("Введіть ID студента: ")

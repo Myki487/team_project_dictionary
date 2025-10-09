@@ -67,7 +67,7 @@ def grades_menu_view() -> str:
     print("2. Переглянути оцінки студента")
     print("3. Редагувати оцінку")
     print("4. Видалити оцінку")
-    print("5 Додати предмет")
+    print("5. Додати дисципліну")
     print("0. У попереднє меню...")
     return get_user_choice(4)
 
@@ -85,9 +85,9 @@ def handle_grades_actions(journal: dict):
         elif choice == '3':
             edit_grade(journal)
         elif choice == '4':
-            add_subject(journal)
-        elif choice == '5':
             delete_grade(journal)
+        elif choice == '5':
+            add_subject(journal)
         elif choice == '0':
             
             break
