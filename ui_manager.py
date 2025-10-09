@@ -24,8 +24,8 @@ def main_menu_view() -> str:
     """Відображає головне меню."""
     print("\n----- ГОЛОВНЕ МЕНЮ ЕЛЕКТРОННОГО ЖУРНАЛУ -----")
     print("1. Дії над записами студента")
-    print("2. Дії над записами оцінок (Наступний етап)")
-    print("3. Сортування журналу (Наступний етап)")
+    print("2. Дії над записами оцінок")
+    print("3. Операції з оцінками")
     print("0. Зберегти та Вийти")
     return get_user_choice(3)
 
@@ -60,3 +60,70 @@ def handle_student_actions(journal: dict):
             break 
         else:
             print("\nЦя опція буде реалізована на наступному етапі.")
+
+
+def grades_menu_view() -> str:
+    """Меню для роботи з оцінками."""
+    print("\n--- МЕНЮ 2: УСПІШНІСТЬ СТУДЕНТІВ ---")
+    print("1. Додати оцінку студенту")
+    print("2. Переглянути оцінки студента")
+    print("3. Редагувати оцінку")
+    print("4. Видалити оцінку")
+    print("5 Додати предмет")
+    print("0. У попереднє меню...")
+    return get_user_choice(4)
+
+def grade_menu_view1() -> str:
+    """Меню для операцій з оцінками."""
+    print("\n--- МЕНЮ 3: ОПЕРАЦІЇ З ОЦІНКАМИ ---")
+    print("1. ТОП-3 студенти за загальним AVG")
+    print("2. AVG одного студента (за конкретною дисципліною)")
+    print("3. AVG усім студентам (за конкретною дисципліною)")
+    print("4. AVG усім студентам (за усіма дисциплінами)")
+    print("0. У попереднє меню...")
+    return get_user_choice(4) #Вибір лише від 0 до 4
+
+def handle_grades_actions(journal: dict):
+    """Обробка дій над оцінками студентів."""
+    from grades_data import add_grade, view_student_grades, edit_grade, delete_grade,add_subject
+
+    while True:
+        choice = grades_menu_view()
+
+        if choice == '1':
+            add_grade(journal)
+        elif choice == '2':
+            view_student_grades(journal)
+        elif choice == '3':
+            edit_grade(journal)
+        elif choice == '4':
+            add_subject(journal)
+        elif choice == '5':
+            delete_grade(journal)
+        elif choice == '0':
+            
+            break
+        else:
+            print("\nЦя опція буде реалізована пізніше.")
+
+def handle_grade_actions2(journal: dict):
+    """Керує діями над оцінками."""
+    from grade_operations import ( #Імпортуємо наші фунцції з файлу grade_operations.py
+        top3_students_avg,
+        avg_one_student_one_subject,
+        avg_all_students_one_subject,
+        avg_all_students_all_subjects
+    )
+
+    while True: #Просимо зробити вибір фунції
+        choice = grade_menu_view1()
+        if choice == '1':
+            top3_students_avg(journal)
+        elif choice == '2':
+            avg_one_student_one_subject(journal)
+        elif choice == '3':
+            avg_all_students_one_subject(journal)
+        elif choice == '4':
+            avg_all_students_all_subjects(journal)
+        elif choice == '0':
+            break
