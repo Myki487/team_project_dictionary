@@ -75,7 +75,7 @@ def grade_menu_view1() -> str:
     """Меню для операцій з оцінками."""
     print("\n--- МЕНЮ 3: ОПЕРАЦІЇ З ОЦІНКАМИ ---")
     print("1. ТОП-3 студенти за загальним AVG")
-    print("2. AVG одного студента (за конкретною дисципліною)")
+    print("2. AVG одного студента (за усіма дисциплінами)")
     print("3. AVG усім студентам (за конкретною дисципліною)")
     print("4. AVG усім студентам (за усіма дисциплінами)")
     print("0. У попереднє меню...")
@@ -108,7 +108,7 @@ def handle_grade_actions2(journal: dict):
     """Керує діями над оцінками."""
     from grade_operations import ( #Імпортуємо наші фунцції з файлу grade_operations.py
         top3_students_avg,
-        avg_one_student_one_subject,
+        avg_one_student_all_subjects,
         avg_all_students_one_subject,
         avg_all_students_all_subjects
     )
@@ -118,7 +118,7 @@ def handle_grade_actions2(journal: dict):
         if choice == '1':
             top3_students_avg(journal)
         elif choice == '2':
-            avg_one_student_one_subject(journal)
+            avg_one_student_all_subjects(journal)
         elif choice == '3':
             avg_all_students_one_subject(journal)
         elif choice == '4':
