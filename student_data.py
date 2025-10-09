@@ -39,3 +39,25 @@ def display_all_students(journal: dict):
     for student_id, data in journal.items():
         print(f"{student_id:<8} | {data['last_name']:<15} | {data['first_name']:<15} | {data['group']:<10}")
     print("-" * 55)
+
+def expel_student(journal: dict):
+    # Відрахувати (видалити) студента за ID після підтвердження.
+    if not journal:
+        print("\nЖурнал порожній. Немає студентів для відрахування.")
+        return
+
+    # Показати поточний список для зручності
+    display_all_students(journal)
+
+    student_id = get_valid_string("Введіть ID студента для відрахування (наприклад, STU001): ")
+    if student_id not in journal:
+        print(f"\nСтудент з ID {student_id} не знайдений.")
+        return
+
+    student = journal[student_id]
+    confirm = input(f"Підтвердьте відрахування {student['first_name']} {student['last_name']} (y/n): ").strip().lower()
+    if confirm in ('y', 'yes', 'т', 'так'):
+        del journal[student_id]
+        print(f"\nСтудент {student['first_name']} {student['last_name']} (ID: {student_id}) відрахований.")
+    else:
+        print("\nВідмовлено. Студента не відраховано.")
