@@ -8,6 +8,7 @@ def get_valid_string(prompt: str) -> str:
             return value
         print("Помилка: Ввід не може бути порожнім. Спробуйте ще раз.")
 
+
 def get_user_choice(max_option: int) -> str:
     """Запитує коректний вибір у меню (від 0 до max_option)."""
     while True:
@@ -17,6 +18,7 @@ def get_user_choice(max_option: int) -> str:
             if 0 <= num_choice <= max_option:
                 return choice
         print(f"Помилка: Некоректний вибір. Будь ласка, введіть число від 0 до {max_option}.")
+
 
 # --- Відображення меню ---
 
@@ -29,6 +31,7 @@ def main_menu_view() -> str:
     print("0. Зберегти та Вийти")
     return get_user_choice(3)
 
+
 def student_menu_view() -> str:
     """Відображає меню дій над студентами."""
     print("\n--- МЕНЮ 1: ДІЇ НАД СТУДЕНТАМИ ---")
@@ -37,8 +40,9 @@ def student_menu_view() -> str:
     print("3. Редагувати дані студента")
     print("4. Відобразити УСІХ студентів (Повний список)")
     print("5. Відобразити успішність конкретного студента (Наступний етап)")
-    print("0. У попереднє меню...") 
+    print("0. У попереднє меню...")
     return get_user_choice(5)
+
 
 # --- Функції для меню (диспетчери) ---
 
@@ -59,7 +63,7 @@ def handle_student_actions(journal: dict):
         elif choice == '4':
             display_all_students(journal)
         elif choice == '0':
-            break 
+            break
         else:
             print("\nЦя опція буде реалізована на наступному етапі.")
 
@@ -71,9 +75,11 @@ def grades_menu_view() -> str:
     print("2. Переглянути оцінки студента")
     print("3. Редагувати оцінку")
     print("4. Видалити оцінку")
-    print("5 Додати предмет")
+    print("5. Додати дисципліну")
+    print("6. Видалити дисципліну")
     print("0. У попереднє меню...")
-    return get_user_choice(4)
+    return get_user_choice(6)
+
 
 def grade_menu_view1() -> str:
     """Меню для операцій з оцінками."""
@@ -87,7 +93,14 @@ def grade_menu_view1() -> str:
 
 def handle_grades_actions(journal: dict):
     """Обробка дій над оцінками студентів."""
-    from grades_data import add_grade, view_student_grades, edit_grade, delete_grade,add_subject
+    from grades_data import (
+        add_grade,
+        view_student_grades,
+        edit_grade,
+        delete_grade,
+        add_subject,
+        delete_subject,  # 🔹 нова функція для видалення дисципліни
+    )
 
     while True:
         choice = grades_menu_view()
@@ -99,11 +112,12 @@ def handle_grades_actions(journal: dict):
         elif choice == '3':
             edit_grade(journal)
         elif choice == '4':
-            add_subject(journal)
-        elif choice == '5':
             delete_grade(journal)
+        elif choice == '5':
+            add_subject(journal)
+        elif choice == '6':
+            delete_subject(journal)
         elif choice == '0':
-            
             break
         else:
             print("\nЦя опція буде реалізована пізніше.")
