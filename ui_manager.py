@@ -27,7 +27,7 @@ def main_menu_view() -> str:
     print("\n----- ГОЛОВНЕ МЕНЮ ЕЛЕКТРОННОГО ЖУРНАЛУ -----")
     print("1. Дії над записами студента")
     print("2. Дії над записами оцінок")
-    print("3. Сортування журналу (Наступний етап)")
+    print("3. Операції з оцінками")
     print("0. Зберегти та Вийти")
     return get_user_choice(3)
 
@@ -36,8 +36,8 @@ def student_menu_view() -> str:
     """Відображає меню дій над студентами."""
     print("\n--- МЕНЮ 1: ДІЇ НАД СТУДЕНТАМИ ---")
     print("1. Додати студента")
-    print("2. Відрахувати студента (Наступний етап)")
-    print("3. Редагувати дані студента (Наступний етап)")
+    print("2. Відрахувати студента")
+    print("3. Редагувати дані студента")
     print("4. Відобразити УСІХ студентів (Повний список)")
     print("5. Відобразити успішність конкретного студента (Наступний етап)")
     print("0. У попереднє меню...")
@@ -48,13 +48,18 @@ def student_menu_view() -> str:
 
 def handle_student_actions(journal: dict):
     """Керує циклом та маршрутизацією для меню дій над студентами."""
-    from student_data import add_student, display_all_students
-
+    
+    from student_data import add_student, display_all_students, expel_student, edit_student
+    
     while True:
         choice = student_menu_view()
 
         if choice == '1':
             add_student(journal)
+        elif choice == '2':
+            expel_student(journal)
+        elif choice == '3':
+            edit_student(journal)
         elif choice == '4':
             display_all_students(journal)
         elif choice == '0':
@@ -75,6 +80,16 @@ def grades_menu_view() -> str:
     print("0. У попереднє меню...")
     return get_user_choice(6)
 
+
+def grade_menu_view1() -> str:
+    """Меню для операцій з оцінками."""
+    print("\n--- МЕНЮ 3: ОПЕРАЦІЇ З ОЦІНКАМИ ---")
+    print("1. ТОП-3 студенти за загальним AVG")
+    print("2. AVG одного студента (за усіма дисциплінами)")
+    print("3. AVG усім студентам (за конкретною дисципліною)")
+    print("4. AVG усім студентам (за усіма дисциплінами)")
+    print("0. У попереднє меню...")
+    return get_user_choice(4) #Вибір лише від 0 до 4
 
 def handle_grades_actions(journal: dict):
     """Обробка дій над оцінками студентів."""
@@ -106,3 +121,25 @@ def handle_grades_actions(journal: dict):
             break
         else:
             print("\nЦя опція буде реалізована пізніше.")
+
+def handle_grade_actions2(journal: dict):
+    """Керує діями над оцінками."""
+    from grade_operations import ( #Імпортуємо наші фунцції з файлу grade_operations.py
+        top3_students_avg,
+        avg_one_student_all_subjects,
+        avg_all_students_one_subject,
+        avg_all_students_all_subjects
+    )
+
+    while True: #Просимо зробити вибір фунції
+        choice = grade_menu_view1()
+        if choice == '1':
+            top3_students_avg(journal)
+        elif choice == '2':
+            avg_one_student_all_subjects(journal)
+        elif choice == '3':
+            avg_all_students_one_subject(journal)
+        elif choice == '4':
+            avg_all_students_all_subjects(journal)
+        elif choice == '0':
+            break

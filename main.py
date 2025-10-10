@@ -1,6 +1,6 @@
 # Імпортуємо функції диспетчера з модулів
 from file_manager import load_journal, save_journal
-from ui_manager import main_menu_view, handle_student_actions, handle_grades_actions  # ✅ додано import
+from ui_manager import main_menu_view, handle_student_actions, handle_grades_actions , handle_grade_actions2  # ✅ додано import
 
 # --- КОНФІГУРАЦІЯ ТА ДАНІ ---
 JOURNAL_FILE = 'data/journal.json'
@@ -31,7 +31,8 @@ def main():
             handle_grades_actions(GLOBAL_JOURNAL)
 
         elif choice == '3':
-            print("\nФункція сортування журналу буде реалізована на наступному етапі.")
+            # Передаємо управління обробнику меню 3
+            handle_grade_actions2(GLOBAL_JOURNAL)
 
         elif choice == '0':
             break  # Вихід із циклу
