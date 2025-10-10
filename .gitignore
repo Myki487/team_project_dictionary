@@ -5,3 +5,4 @@ __pycache__/
 # IDE/Editor файли (провсяк випадок)
 .vscode/
 .idea/
+data/journal.json

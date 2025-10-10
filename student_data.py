@@ -14,12 +14,20 @@ def add_student(journal: dict):
     last_name = get_valid_string("Введіть Прізвище: ")
     first_name = get_valid_string("Введіть Ім'я: ")
     group = get_valid_string("Введіть Групу: ")
+    # Нове поле: Курс (ціле число > 0)
+    while True:
+        course_input = input("Введіть номер Курсу (число, наприклад 1, 2, 3): ").strip()
+        if course_input.isdigit() and int(course_input) > 0:
+            course = int(course_input)
+            break
+        print("Помилка: введіть позитивне число для курсу.")
 
     # 3. Додавання нового запису у GLOBAL_JOURNAL (через аргумент journal)
     journal[new_id] = {
         "first_name": first_name,
         "last_name": last_name,
         "group": group,
+        "course": course,
         "performance": {}  # Словник для майбутніх оцінок
     }
 
@@ -32,16 +40,22 @@ def display_all_students(journal: dict):
         return
 
     print("\n----- ПОТОЧНИЙ СПИСОК СТУДЕНТІВ -----")
-    print(f"{'ID':<8} | {'Прізвище':<15} | {'Ім\'я':<15} | {'Група':<10}")
-    print("-" * 55)
+    print(f"{'ID':<8} | {'Прізвище':<15} | {'Ім\'я':<15} | {'Група':<10} | {'Курс':<5}")
+    print("-" * 70)
 
     # Ітерація по ключах (ID) та значеннях (словники даних)
     for student_id, data in journal.items():
-        print(f"{student_id:<8} | {data['last_name']:<15} | {data['first_name']:<15} | {data['group']:<10}")
-    print("-" * 55)
+        # Показуємо дефолтну позначку, якщо поле 'course' відсутнє або пусте
+        course_val = data.get('course', '')
+        course_display = str(course_val) if course_val not in (None, '') else '-'
+        print(f"{student_id:<8} | {data.get('last_name',''):<15} | {data.get('first_name',''):<15} | {data.get('group',''):<10} | {course_display:<6}")
+    print("-" * 70)
 
 def expel_student(journal: dict):
-    # Відрахувати (видалити) студента за ID після підтвердження.
+    """
+    Видалити студента з журналу за його ID після підтвердження користувача.
+    Показує поточний список студентів для вибору та просить підтвердження.
+    """
     if not journal:
         print("\nЖурнал порожній. Немає студентів для відрахування.")
         return
@@ -55,7 +69,9 @@ def expel_student(journal: dict):
         return
 
     student = journal[student_id]
-    confirm = input(f"Підтвердьте відрахування {student['first_name']} {student['last_name']} (y/n): ").strip().lower()
+    # Показуємо курс у підтвердженні, якщо він є
+    course_info = f" (курс: {student.get('course','-')})" if student.get('course', '') not in (None, '') else ''
+    confirm = input(f"Підтвердьте відрахування {student['first_name']} {student['last_name']}{course_info} (y/n): ").strip().lower()
     if confirm in ('y', 'yes', 'т', 'так'):
         del journal[student_id]
         print(f"\nСтудент {student['first_name']} {student['last_name']} (ID: {student_id}) відрахований.")
@@ -85,13 +101,15 @@ def edit_student(journal: dict):
     print(f"  Прізвище: {student['last_name']}")
     print(f"  Ім'я: {student['first_name']}")
     print(f"  Група: {student['group']}")
+    print(f"  Курс: {student.get('course', '')}")
 
     # Запитати нові значення (порожнє = без змін)
     new_last = input(f"Введіть нове Прізвище (залиште порожнім щоб не змінювати) [{student['last_name']}]: ").strip()
     new_first = input(f"Введіть нове Ім'я (залиште порожнім щоб не змінювати) [{student['first_name']}]: ").strip()
     new_group = input(f"Введіть нову Групу (залиште порожнім щоб не змінювати) [{student['group']}]: ").strip()
+    new_course = input(f"Введіть новий Курс (число, залиште порожнім щоб не змінювати) [{student.get('course', '')}]: ").strip()
 
-    if not new_last and not new_first and not new_group:
+    if not new_last and not new_first and not new_group and not new_course:
         print("\nНічого не змінено.")
         return
 
@@ -106,6 +124,29 @@ def edit_student(journal: dict):
         student['first_name'] = new_first
     if new_group:
         student['group'] = new_group
+    if new_course:
+        if new_course.isdigit() and int(new_course) > 0:
+            student['course'] = int(new_course)
+        else:
+            print("Попередження: курс не було змінено — введено некоректне значення.")
 
     journal[student_id] = student
     print(f"\nДані студента (ID: {student_id}) успішно оновлено.")
+
+
+def clear_all_students(journal: dict):
+    """
+    Очищує весь журнал студентів після підтвердження користувача.
+    Якщо журнал порожній — повідомляє про це.
+    """
+    if not journal:
+        print("\nЖурнал порожній. Немає студентів для видалення.")
+        return
+
+    print("\n----- УВАГА: ОЧИСТКА ВСЬОГО СПИСКУ СТУДЕНТІВ -----")
+    confirm = input("Ви впевнені, що хочете видалити всіх студентів? Це незворотно. (y/n): ").strip().lower()
+    if confirm in ('y', 'yes', 'т', 'так'):
+        journal.clear()
+        print("\nСписок студентів був очищений.")
+    else:
+        print("\nОперацію скасовано. Список студентів не змінено.")
