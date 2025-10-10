@@ -14,6 +14,12 @@ def main():
     # 1. ЗАВАНТАЖЕННЯ ДАНИХ
     GLOBAL_JOURNAL = load_journal(JOURNAL_FILE)
     if GLOBAL_JOURNAL:
+        # Backfill: уніфікуємо структуру записів — додамо поле 'course', якщо воно відсутнє
+        for sid, sdata in list(GLOBAL_JOURNAL.items()):
+            if 'course' not in sdata:
+                sdata['course'] = ''
+                GLOBAL_JOURNAL[sid] = sdata
+
         print(f"Дані завантажено успішно. ({len(GLOBAL_JOURNAL)} студентів).")
     else:
         print("Розпочинаємо з порожнього журналу.")

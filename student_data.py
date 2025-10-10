@@ -45,8 +45,10 @@ def display_all_students(journal: dict):
 
     # Ітерація по ключах (ID) та значеннях (словники даних)
     for student_id, data in journal.items():
-        course_display = str(data.get('course', ''))
-        print(f"{student_id:<8} | {data['last_name']:<15} | {data['first_name']:<15} | {data['group']:<10} | {course_display:<5}")
+        # Показуємо дефолтну позначку, якщо поле 'course' відсутнє або пусте
+        course_val = data.get('course', '')
+        course_display = str(course_val) if course_val not in (None, '') else '-'
+        print(f"{student_id:<8} | {data.get('last_name',''):<15} | {data.get('first_name',''):<15} | {data.get('group',''):<10} | {course_display:<6}")
     print("-" * 70)
 
 def expel_student(journal: dict):
@@ -64,7 +66,9 @@ def expel_student(journal: dict):
         return
 
     student = journal[student_id]
-    confirm = input(f"Підтвердьте відрахування {student['first_name']} {student['last_name']} (y/n): ").strip().lower()
+    # Показуємо курс у підтвердженні, якщо він є
+    course_info = f" (курс: {student.get('course','-')})" if student.get('course', '') not in (None, '') else ''
+    confirm = input(f"Підтвердьте відрахування {student['first_name']} {student['last_name']}{course_info} (y/n): ").strip().lower()
     if confirm in ('y', 'yes', 'т', 'так'):
         del journal[student_id]
         print(f"\nСтудент {student['first_name']} {student['last_name']} (ID: {student_id}) відрахований.")
