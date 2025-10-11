@@ -1,3 +1,4 @@
+# Файл розроблено Годуном Миколою
 # Імпортуємо функції диспетчера з модулів
 from file_manager import load_journal, save_journal
 from ui_manager import main_menu_view, handle_student_actions, handle_grades_actions , handle_grade_actions2  # ✅ додано import
@@ -20,7 +21,7 @@ def main():
                 sdata['course'] = ''
                 GLOBAL_JOURNAL[sid] = sdata
 
-        print(f"Дані завантажено успішно. ({len(GLOBAL_JOURNAL)} студентів).")
+        print(f"Дані завантажено успішно. ({len(GLOBAL_JOURNAL)} студенти).")
     else:
         print("Розпочинаємо з порожнього журналу.")
 

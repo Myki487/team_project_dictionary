@@ -1,0 +1,74 @@
+{
+    "STU001": {
+        "first_name": "Артем",
+        "last_name": "Власовець",
+        "group": "КН-42",
+        "course": 4,
+        "performance": {
+            "Math": [
+                90,
+                60
+            ],
+            "Geo": [
+                100
+            ],
+            "Phi": [
+                100
+            ],
+            "Alg": []
+        },
+        "middle_name": "Павлович"
+    },
+    "STU002": {
+        "first_name": "1",
+        "last_name": "1",
+        "group": "1",
+        "course": 1,
+        "performance": {
+            "Math": [
+                10,
+                70
+            ],
+            "Phi": [
+                20
+            ]
+        }
+    },
+    "STU003": {
+        "first_name": "1",
+        "last_name": "1",
+        "group": "1",
+        "course": 1,
+        "performance": {
+            "Math": [
+                35,
+                80
+            ],
+            "Phi": [
+                70
+            ]
+        }
+    },
+    "STU004": {
+        "first_name": "1",
+        "last_name": "1",
+        "group": "1",
+        "course": 1,
+        "performance": {
+            "Math": [
+                65,
+                54
+            ],
+            "Phi": [
+                80
+            ]
+        }
+    },
+    "STU005": {
+        "first_name": "1",
+        "last_name": "1",
+        "group": "1",
+        "course": 1,
+        "performance": {}
+    }
+}
