@@ -1,3 +1,4 @@
+# Над файлом працював Лях Дмитро
 from ui_manager import get_valid_string #Імпортуємо фунцію для валідації данних
 
 def top3_students_avg(journal: dict):

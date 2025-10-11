@@ -1,9 +1,10 @@
+# Над файлом працював Бондар Олександр
 from ui_manager import get_valid_string
 from utility import find_student
 
 
 # 🟢 Додавання нової дисципліни студенту
-def add_subject(journal: dict, student_id: str = None):
+def add_subject(journal: dict, student_id: str = None, subject_name: str = None):
     """Додає нову дисципліну для конкретного студента."""
     if not journal:
         print("\n⚠️ Журнал порожній.")
@@ -18,16 +19,19 @@ def add_subject(journal: dict, student_id: str = None):
         print(f"❌ Студента з ID '{student_id}' не знайдено.")
         return
 
-    subject = get_valid_string("Введіть назву дисципліни: ")
+    if not subject_name:
+        subject = get_valid_string("Введіть назву дисципліни: ")
+    else:
+        subject = subject_name
 
     # Якщо дисципліна вже є
-    if subject in student["performance"]:
-        print(f"⚠️ Дисципліна '{subject}' вже існує у студента {student['last_name']} {student['first_name']}.")
+    if subject in student.get("performance", {}):
+        print(f"⚠️ Дисципліна '{subject}' вже існує у студента {student.get('last_name','')} {student.get('first_name','')}.")
         return subject
 
     # Створюємо нову дисципліну з порожнім списком оцінок
-    student["performance"][subject] = []
-    print(f"✅ Дисципліну '{subject}' успішно додано студенту {student['last_name']} {student['first_name']}.")
+    student.setdefault("performance", {})[subject] = []
+    print(f"✅ Дисципліну '{subject}' успішно додано студенту {student.get('last_name','')} {student.get('first_name','')}.")
     return subject
 
 
@@ -51,9 +55,15 @@ def add_grade(journal: dict):
     # Якщо дисципліна не знайдена — пропонуємо створити
     if subject not in performance:
         print(f"⚠️ Дисципліну '{subject}' не знайдено у цього студента.")
-        create = input("Хочете створити цю дисципліну? (так/ні): ").strip().lower()
-        if create in ("так", "y", "yes"):
-            subject = add_subject(journal, student_id)
+        create = input("Хочете створити цю дисципліну? (yes/no): ").strip().lower()
+        if create in ("т", "так", "y", "yes"):
+            # Функція add_subject поверне назву дисципліни, яку ми використаємо нижче
+            subject = add_subject(journal, student_id, subject_name=subject)
+
+            # Якщо add_subject повернула None (помилка або відміна), виходимо
+            if not subject:
+                print("❌ Додавання оцінки скасовано (невдале створення дисципліни).")
+                return
         else:
             print("❌ Додавання оцінки скасовано.")
             return
@@ -61,10 +71,11 @@ def add_grade(journal: dict):
     # Додаємо оцінку
     while True:
         try:
-            grade = int(input("Введіть оцінку (1–100): ").strip())
+            grade_input = input("Введіть оцінку (1–100): ").strip()
+            grade = int(grade_input)
             if 1 <= grade <= 100:
                 performance[subject].append(grade)
-                print(f"✅ Оцінку {grade} додано з дисципліни '{subject}' студенту {student['last_name']} {student['first_name']}.")
+                print(f"✅ Оцінку {grade} додано з дисципліни '{subject}' студенту {student.get('last_name','')} {student.get('first_name','')} ({student_id}).")
                 break
             else:
                 print("Помилка: оцінка має бути від 1 до 100.")
@@ -88,10 +99,10 @@ def view_student_grades(journal: dict):
 
     performance = student.get("performance", {})
     if not performance:
-        print(f"⚠️ У студента {student['last_name']} {student['first_name']} ще немає оцінок.")
+        print(f"⚠️ У студента {student.get('last_name','')} {student.get('first_name','')} ще немає оцінок.")
         return
 
-    print(f"\n📘 Успішність студента {student['last_name']} {student['first_name']} ({student_id}):")
+    print(f"\n📘 Успішність студента {student.get('last_name','')} {student.get('first_name','')} ({student_id}):")
     for subject, marks in performance.items():
         if marks:
             avg = sum(marks) / len(marks)
@@ -129,19 +140,34 @@ def edit_grade(journal: dict):
         return
 
     print(f"Поточні оцінки: {performance[subject]}")
+    # Вибір індексу (один раз)
     try:
-        index = int(input("Введіть номер оцінки для редагування (починаючи з 1): ")) - 1
-        if 0 <= index < len(performance[subject]):
-            new_grade = int(input("Нова оцінка (1–100): "))
-            if 1 <= new_grade <= 100:
-                performance[subject][index] = new_grade
-                print("✅ Оцінку змінено успішно.")
-            else:
-                print("❌ Оцінка має бути в діапазоні 1–100.")
-        else:
-            print("❌ Невірний номер оцінки.")
+        index_input = input("Введіть номер оцінки для редагування (починаючи з 1): ").strip()
+        index = int(index_input) - 1
     except ValueError:
         print("❌ Введено некоректне число.")
+        return
+
+    if not (0 <= index < len(performance[subject])):
+        print("❌ Невірний номер оцінки.")
+        return
+
+    # Цикл для введення нової оцінки — дозволяє переробити введення, поки не буде коректного значення або поки не натиснуть Enter для скасування
+    while True:
+        new_input = input("Нова оцінка (1–100). Натисніть Enter щоб скасувати: ").strip()
+        if new_input == "":
+            print("❌ Редагування оцінки скасовано.")
+            return
+        if not new_input.isdigit():
+            print("Помилка: введіть число від 1 до 100 або натисніть Enter щоб скасувати.")
+            continue
+        new_grade = int(new_input)
+        if 1 <= new_grade <= 100:
+            performance[subject][index] = new_grade
+            print("✅ Оцінку змінено успішно.")
+            break
+        else:
+            print("Помилка: оцінка має бути від 1 до 100.")
 
 
 # 🟢 Видалення конкретної оцінки студента
@@ -198,7 +224,7 @@ def delete_subject(journal: dict):
 
     performance = student.get("performance", {})
     if not performance:
-        print(f"⚠️ У студента {student['last_name']} {student['first_name']} немає дисциплін.")
+        print(f"⚠️ У студента {student.get('last_name','')} {student.get('first_name','')} немає дисциплін.")
         return
 
     print(f"Дисципліни студента: {', '.join(performance.keys())}")
@@ -208,9 +234,9 @@ def delete_subject(journal: dict):
         print(f"❌ Дисципліну '{subject}' не знайдено.")
         return
 
-    confirm = input(f"Ви впевнені, що хочете видалити '{subject}' разом з усіма оцінками? (так/ні): ").strip().lower()
-    if confirm in ("так", "y", "yes"):
+    confirm = input(f"Ви впевнені, що хочете видалити '{subject}' разом з усіма оцінками? (yes/no): ").strip().lower()
+    if confirm in ("т", "так", "y", "yes"):
         del performance[subject]
-        print(f"🗑️ Дисципліну '{subject}' успішно видалено у студента {student['last_name']} {student['first_name']}.")
+        print(f"🗑️  Дисципліну '{subject}' успішно видалено у студента {student.get('last_name','')} {student.get('first_name','')}.")
     else:
         print("❌ Видалення скасовано.")
